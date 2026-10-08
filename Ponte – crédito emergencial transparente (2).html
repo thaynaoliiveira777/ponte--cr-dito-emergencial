@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ponte – crédito emergencial transparente</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F2F5F1;--card:#fff;--ink:#12302A;--mut:#5B6F69;--line:#D9E2DD;--brand:#0E6B55;--brand-ink:#fff;--warn:#B45309;--warnbg:#FEF3C7;--bad:#B42318;--badbg:#FEE4E2;--ok:#0E6B55;--okbg:#DDF3EA;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1815;--card:#14251F;--ink:#E6F1EC;--mut:#93A8A1;--line:#264038;--brand:#3FCFA3;--brand-ink:#08201A;--warn:#FBBF24;--warnbg:#3A2C0B;--bad:#FDA29B;--badbg:#3B1512;--ok:#3FCFA3;--okbg:#0F3328}}
+:root[data-theme="dark"]{--bg:#0C1815;--card:#14251F;--ink:#E6F1EC;--mut:#93A8A1;--line:#264038;--brand:#3FCFA3;--brand-ink:#08201A;--warn:#FBBF24;--warnbg:#3A2C0B;--bad:#FDA29B;--badbg:#3B1512;--ok:#3FCFA3;--okbg:#0F3328}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:520px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:2rem;line-height:1.1;font-weight:800;margin:.4em 0 .3em;letter-spacing:-.02em}
+h2{font-size:1.25rem;margin:0 0 .6em;font-weight:600}
+p{margin:0 0 .8em;max-width:60ch}
+.logo{font-weight:800;font-size:1.1rem;color:var(--brand)}
+.mut{color:var(--mut);font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}
+label{display:block;font-weight:600;margin:12px 0 4px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:12px}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--brand);outline-offset:1px}
+.btn{width:100%;margin-top:18px;font:inherit;font-weight:700;background:var(--brand);color:var(--brand-ink);border:0;border-radius:12px;padding:15px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand);margin-top:10px}
+.opt{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;cursor:pointer;position:relative}
+.opt[aria-pressed="true"]{border-color:var(--brand);background:var(--okbg)}
+.opt b{font-size:1.3rem}
+.tag{position:absolute;top:-10px;right:12px;background:var(--brand);color:var(--brand-ink);font-size:.75rem;font-weight:700;padding:2px 10px;border-radius:99px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.bar{height:12px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.bar i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .3s}
+.alert{border-radius:12px;padding:12px 14px;margin:12px 0;font-size:.95rem}
+.alert.warn{background:var(--warnbg);color:var(--warn)}.alert.bad{background:var(--badbg);color:var(--bad)}.alert.ok{background:var(--okbg);color:var(--ok)}
+.parc{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.parc.paga{opacity:.55}
+.parc button{font:inherit;font-size:.85rem;font-weight:600;border:1.5px solid var(--brand);color:var(--brand);background:transparent;border-radius:8px;padding:6px 10px;cursor:pointer}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<main>
+<div class="logo">Ponte</div>
+
+<!-- TELA 1: início -->
+<section id="home">
+  <h1>Precisando organizar uma emergência financeira?</h1>
+  <p>Simule quanto vai pagar antes de decidir. Mostramos juros, total e o peso de cada parcela na sua renda. Sem letras miúdas.</p>
+  <button class="btn" id="go">Simular agora</button>
+  <div class="card">
+    <div class="row"><span>Custos claros</span><span class="mut">antes de contratar</span></div>
+    <div class="row"><span>Parcela que cabe</span><span class="mut">calculada pela sua renda</span></div>
+    <div class="row"><span>Sem pressão</span><span class="mut">compare e desista quando quiser</span></div>
+  </div>
+  <p class="mut">Protótipo de demonstração: valores e taxas são fictícios e não representam uma oferta real de crédito.</p>
+</section>
+
+<!-- TELA 2: simulação -->
+<section id="sim" class="hidden">
+  <h1>Vamos simular</h1>
+  <div class="card">
+    <label for="valor">Quanto você precisa? (R$)</label>
+    <input id="valor" type="number" inputmode="decimal" min="100" max="5000" value="1500">
+    <label for="renda">Qual é sua renda mensal? (R$)</label>
+    <input id="renda" type="number" inputmode="decimal" min="0" value="3000">
+    <label for="gasto">Quanto você gasta por mês? (R$)</label>
+    <input id="gasto" type="number" inputmode="decimal" min="0" value="2000">
+    <label for="dias">Em quantos dias você recebe o próximo salário?</label>
+    <input id="dias" type="number" inputmode="numeric" min="0" max="30" value="10">
+    <div id="erro" class="alert bad hidden" role="alert"></div>
+    <button class="btn" id="calc">Ver opções</button>
+  </div>
+</section>
+
+<!-- TELA 3: resultado -->
+<section id="res" class="hidden">
+  <h1 id="resTitulo"></h1>
+  <p class="mut">Toque em uma opção para ver todos os custos.</p>
+  <div id="opcoes"></div>
+  <div class="card" id="detalhe"></div>
+  <button class="btn" id="contratar">Contratar esta opção</button>
+  <button class="btn ghost" id="voltar">Refazer simulação</button>
+</section>
+
+<!-- TELA 4: painel -->
+<section id="painel" class="hidden">
+  <h1>Seu painel</h1>
+  <div class="card">
+    <h2>Saldo devedor</h2>
+    <div style="font-size:2rem;font-weight:800" id="saldo"></div>
+    <div class="bar"><i id="prog" style="width:0"></i></div>
+    <div class="mut" id="progTxt"></div>
+  </div>
+  <div class="card">
+    <h2>Resumo</h2>
+    <div id="resumo"></div>
+  </div>
+  <div class="card">
+    <h2>Parcelas</h2>
+    <div id="lista"></div>
+  </div>
+  <button class="btn ghost" id="novo">Fazer nova simulação</button>
+</section>
+</main>
+
+<script>
+// ---------- Configuração (valores fictícios) ----------
+const TAXA_MES = 0.049;           // 4,9% ao mês (exemplo)
+const PRAZOS = [3, 6, 9];         // opções de parcelas
+const brl = n => n.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const pct = n => (n*100).toFixed(1).replace(".", ",") + "%";
+const $ = id => document.getElementById(id);
+
+// ---------- Cálculo (Tabela Price) ----------
+function parcela(valor, n, i = TAXA_MES){
+  return valor * i / (1 - Math.pow(1 + i, -n));
+}
+function gerarOpcao(valor, n, renda){
+  const p = parcela(valor, n);
+  return {n, p, total: p*n, juros: p*n - valor, comp: p/renda};
+}
+// saldo devedor após k parcelas pagas
+function saldoApos(valor, n, k){
+  const p = parcela(valor, n);
+  let s = valor;
+  for(let j=0;j<k;j++) s = s*(1+TAXA_MES) - p;
+  return Math.max(s, 0);
+}
+// CET aproximado = taxa mensal anualizada (sem tarifas neste protótipo)
+const cetAno = Math.pow(1 + TAXA_MES, 12) - 1;
+
+// ---------- Estado ----------
+let S = {valor:0, renda:0, gasto:0, dias:0, opcoes:[], sel:1, contrato:null};
+
+function mostrar(id){
+  ["home","sim","res","painel"].forEach(s => $(s).classList.toggle("hidden", s !== id));
+  window.scrollTo(0,0);
+}
+
+// ---------- Simulação ----------
+$("go").onclick = () => mostrar("sim");
+$("calc").onclick = () => {
+  const v = +$("valor").value, r = +$("renda").value, g = +$("gasto").value, d = +$("dias").value;
+  const erro = $("erro");
+  if(!(v >= 100 && v <= 5000) || !(r > 0) || g < 0){
+    erro.textContent = "Confira os valores: peça entre R$ 100 e R$ 5.000 e informe uma renda maior que zero.";
+    erro.classList.remove("hidden"); return;
+  }
+  erro.classList.add("hidden");
+  S = {...S, valor:v, renda:r, gasto:g, dias:d, opcoes: PRAZOS.map(n => gerarOpcao(v, n, r))};
+  // opção equilibrada: menor prazo com parcela até 15% da renda; senão, a de menor peso
+  const ok = S.opcoes.findIndex(o => o.comp <= 0.15);
+  S.sel = ok >= 0 ? ok : S.opcoes.length - 1;
+  S.rec = S.sel;
+  renderResultado();
+  mostrar("res");
+};
+
+// ---------- Resultado ----------
+function renderResultado(){
+  $("resTitulo").textContent = "Você precisa de " + brl(S.valor);
+  $("opcoes").innerHTML = S.opcoes.map((o,i) => `
+    <button class="opt" data-i="${i}" aria-pressed="${i===S.sel}">
+      ${i===S.rec ? '<span class="tag">Mais equilibrada</span>' : ''}
+      <div><b>${o.n}x de ${brl(o.p)}</b></div>
+      <div class="mut">Total a pagar: ${brl(o.total)} · ${pct(o.comp)} da sua renda</div>
+    </button>`).join("");
+  document.querySelectorAll(".opt").forEach(b => b.onclick = () => { S.sel = +b.dataset.i; renderResultado(); });
+  renderDetalhe();
+}
+function renderDetalhe(){
+  const o = S.opcoes[S.sel];
+  const sobra = S.renda - S.gasto;
+  let alerta = "";
+  if(o.p > sobra){
+    alerta = `<div class="alert bad">Atenção: essa parcela é maior que o que sobra da sua renda depois dos gastos (${brl(Math.max(sobra,0))}). Considere um prazo maior ou um valor menor.</div>`;
+  } else if(o.comp > 0.30){
+    alerta = `<div class="alert bad">Atenção: essa parcela representa uma parte significativa da sua renda mensal. Avalie se você conseguirá manter esse pagamento junto com suas outras despesas.</div>`;
+  } else if(o.comp > 0.15){
+    alerta = `<div class="alert warn">Essa parcela usa uma parte relevante da sua renda. Compare com um prazo maior.</div>`;
+  } else {
+    alerta = `<div class="alert ok">Essa parcela cabe com folga na sua renda.</div>`;
+  }
+  const venc = new Date(); venc.setDate(venc.getDate() + 30);
+  $("detalhe").innerHTML = `
+    <h2>Todos os custos</h2>
+    <div class="row"><span>Valor solicitado</span><b>${brl(S.valor)}</b></div>
+    <div class="row"><span>Valor que você recebe</span><b>${brl(S.valor)}</b></div>
+    <div class="row"><span>Taxa de juros</span><b>${pct(TAXA_MES)} ao mês</b></div>
+    <div class="row"><span>Parcelas</span><b>${o.n}x de ${brl(o.p)}</b></div>
+    <div class="row"><span>Primeiro vencimento</span><b>${venc.toLocaleDateString("pt-BR")}</b></div>
+    <div class="row"><span>Total de juros</span><b>${brl(o.juros)}</b></div>
+    <div class="row"><span>Total a pagar</span><b>${brl(o.total)}</b></div>
+    <div class="row"><span>Custo efetivo total (CET)</span><b>${pct(cetAno)} ao ano</b></div>
+    <h2 style="margin-top:16px">Peso na sua renda</h2>
+    <div class="bar"><i style="width:${Math.min(o.comp*100,100)}%"></i></div>
+    <div class="mut">A parcela usa ${pct(o.comp)} da sua renda mensal.</div>
+    ${alerta}
+    <p class="mut">Se atrasar, podem ser cobrados multa e juros de mora, e seu nome pode ser negativado. Cobrar isso só é permitido conforme o contrato.</p>`;
+}
+$("voltar").onclick = () => mostrar("sim");
+
+// ---------- Contratação e painel ----------
+$("contratar").onclick = () => {
+  const o = S.opcoes[S.sel];
+  S.contrato = {valor:S.valor, n:o.n, p:o.p, total:o.total, pagas:0, renda:S.renda};
+  renderPainel(); mostrar("painel");
+};
+function renderPainel(){
+  const c = S.contrato;
+  const saldo = saldoApos(c.valor, c.n, c.pagas);
+  $("saldo").textContent = brl(saldo);
+  $("prog").style.width = (c.pagas / c.n * 100) + "%";
+  $("progTxt").textContent = `${c.pagas} de ${c.n} parcelas pagas`;
+  $("resumo").innerHTML = `
+    <div class="row"><span>Próxima parcela</span><b>${c.pagas < c.n ? brl(c.p) : "Quitado"}</b></div>
+    <div class="row"><span>Parcelas restantes</span><b>${c.n - c.pagas}</b></div>
+    <div class="row"><span>Total já pago</span><b>${brl(c.p * c.pagas)}</b></div>
+    <div class="row"><span>Comprometimento da renda</span><b>${c.pagas < c.n ? pct(c.p / c.renda) : "0%"}</b></div>`;
+  const hoje = new Date();
+  $("lista").innerHTML = Array.from({length:c.n}, (_,k) => {
+    const d = new Date(hoje); d.setMonth(d.getMonth() + k + 1);
+    const paga = k < c.pagas, proxima = k === c.pagas;
+    return `<div class="parc ${paga?'paga':''}">
+      <span>Parcela ${k+1} · ${d.toLocaleDateString("pt-BR")}<br><b>${brl(c.p)}</b></span>
+      ${paga ? '<span class="mut">Paga</span>' : proxima ? '<button data-pagar="1">Marcar como paga</button>' : '<span class="mut">A vencer</span>'}
+    </div>`;
+  }).join("");
+  const b = document.querySelector("[data-pagar]");
+  if(b) b.onclick = () => { c.pagas++; renderPainel(); };
+}
+$("novo").onclick = () => mostrar("sim");
+</script>
+</body>
+</html>
